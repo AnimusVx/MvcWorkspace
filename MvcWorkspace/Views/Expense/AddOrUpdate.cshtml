@@ -1,0 +1,24 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model MvcWorkspace.Models.Expense;
+@{
+    ViewData["Title"] = "AddOrUpdate";
+
+}
+<h1>Add or Update</h1>
+<div>
+    <form>
+        <input asp-for="Id" hidden />
+
+        <label asp-for="ExpenseName" class="form-label"></label>
+        <input asp-for="ExpenseName" class="form-control" />
+        <div asp-validation-for="ExpenseName"></div>
+
+        <label asp-for="Amount" class="form-label"></label>
+        <input asp-for="Amount" class="form-control"/>
+        <div asp-validation-for="Amount"></div>
+
+        <a type="submit" class="btn btn-primary mt-2" asp-controller="ExpenseController" asp-action="AddOrUpdate">Add</a>
+    </form>
+</div>
