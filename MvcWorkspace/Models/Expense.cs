@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MvcWorkspace.Models
@@ -13,11 +14,12 @@ namespace MvcWorkspace.Models
         public string ExpenseName { get; set; }
         
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage ="Yanlış Değer köşende ağlayabilirsin EZİK")]
+        [Range(1, int.MaxValue, ErrorMessage ="Yanlış Değer")]
         public int Amount { get; set; }
-        
-        [ForeignKey("ExpenseCategory")]
+
+        [DisplayName("Category ID")]
         public int C_Id {get; set;}
+        [ForeignKey("C_Id")]
         public ExpenseCategory ExpenseCategory {get; set;}
     }
 }
