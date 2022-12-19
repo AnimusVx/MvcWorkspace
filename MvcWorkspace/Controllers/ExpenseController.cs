@@ -2,13 +2,15 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MvcWorkspace.Data;
 using MvcWorkspace.Models;
+using MvcWorkspace.Models.ViewModels;
+using System.Collections.Generic;
 
 namespace MvcWorkspace.Controllers
 {
     public class ExpenseController : Controller
     {
         private readonly AppDbContext _db;
-        public ExpenseController(AppDbContext db) 
+        public ExpenseController(AppDbContext db)
         {
             _db = db;
         }
@@ -17,13 +19,13 @@ namespace MvcWorkspace.Controllers
         {
             IEnumerable<Expense> Expenses = _db.Expenses;
             foreach (var expense in Expenses)
-            { 
+            {
                 expense.ExpenseCategory = _db.ExpenseCategories.Find(expense.C_Id);
             }
             return View(Expenses);
         }
 
-        public IActionResult Delete(int id) 
+        public IActionResult Delete(int id)
         {
             var expense = _db.Expenses.Find(id);
             if (expense == null || id == 0) return NotFound();
@@ -34,12 +36,22 @@ namespace MvcWorkspace.Controllers
 
         public IActionResult AddOrUpdate(int id)
         {
-            IEnumerable<SelectListItem> ExpenseCat = _db.ExpenseCategories.Select(x => new SelectListItem { Value = x.C_Id.ToString(), Text = x.ExpenseCName });
-            ViewBag.ExpenseCat = ExpenseCat;
+            ExpenseVM expenseVM = new ExpenseVM()
+            {
+                Expense = new Expense(),
+                ExpenseCat = _db.ExpenseCategories.Select(x => new SelectListItem { Value = x.C_Id.ToString(), Text = x.ExpenseCName })
+            };
+            
+            // ViewBag.ExpenseCat = ExpenseCat;
             if (id == 0)
-                return View(new Expense());
+            {
+                return View(expenseVM);
+            }
             else
-                return View(_db.Expenses.Find(id));
+            {
+                expenseVM.Expense = _db.Expenses.Find(id);
+                return View(expenseVM);
+            }
         }
 
         [HttpPost]
