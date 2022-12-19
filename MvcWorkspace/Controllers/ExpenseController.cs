@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MvcWorkspace.Data;
 using MvcWorkspace.Models;
 
@@ -8,66 +7,53 @@ namespace MvcWorkspace.Controllers
     public class ExpenseController : Controller
     {
         private readonly AppDbContext _db;
-
-        public ExpenseController(AppDbContext db)
-        { 
-          _db = db;
+        public ExpenseController(AppDbContext db) 
+        {
+            _db = db;
         }
+
         public IActionResult Index()
         {
-            IEnumerable<Expense> expenses  = _db.Expenses;
-            return View(expenses);
+            IEnumerable<Expense> Expenses = _db.Expenses;
+            foreach (var expense in Expenses)
+            { 
+                expense.ExpenseCategory = _db.ExpenseCategories.Find(expense.C_Id);
+            }
+            return View(Expenses);
         }
+
         public IActionResult Delete(int id) 
         {
             var expense = _db.Expenses.Find(id);
-            if(expense == null || id == 0)
-            {
-                ViewData["Title"] = "hata";
-                return NotFound();
-            }
-            ViewData["Title"] = "hata değil";
-
+            if (expense == null || id == 0) return NotFound();
             _db.Expenses.Remove(expense);
-            _db.SaveChanges ();
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
-        public IActionResult AddOrUpdate(int id) 
+
+        public IActionResult AddOrUpdate(int id)
         {
-            if(id == 0)
-            {
-                //Add
+            if (id == 0)
                 return View(new Expense());
-            }
             else
-            {
-                //Update
-                var obj = _db.Expenses.Find(id);
-                return View(obj);
-            }
+                return View(_db.Expenses.Find(id));
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddOrUpdate(Expense expense)
         {
-            if(ModelState.IsValid) 
-            { 
-                if(expense.Id == 0)
+                if (expense.Id == 0)
                 {
-                    //Add db 
-                    _db.Expenses.Add(expense);
-                    _db.SaveChanges();
-                    
+                    _db.Add(expense);
                 }
                 else
                 {
-                    //Update db
-                    _db.Expenses.Update(expense);
-                    _db.SaveChanges();  
+                    _db.Update(expense);
                 }
+                _db.SaveChanges();
+
                 return RedirectToAction("Index");
-            }
-            return View(expense);
         }
     }
 }

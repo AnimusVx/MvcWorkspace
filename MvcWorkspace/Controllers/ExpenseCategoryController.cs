@@ -7,67 +7,48 @@ namespace MvcWorkspace.Controllers
     public class ExpenseCategoryController : Controller
     {
         private readonly AppDbContext _db;
-        public ExpenseCategoryController(AppDbContext db) 
+        public ExpenseCategoryController(AppDbContext db)
         {
             _db = db;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<ExpenseCategory> ExpenseCategory = _db.ExpenseCategory;
-            return View(ExpenseCategory);
+            IEnumerable<ExpenseCategory> expenseCategories = _db.ExpenseCategories;
+            return View(expenseCategories);
         }
 
-        public IActionResult Delete(int id) 
+        public IActionResult Delete(int id)
         {
-            var expensec = _db.ExpenseCategory.Find(id);
+            var expensec = _db.ExpenseCategories.Find(id);
             if (expensec == null || id == 0) return NotFound();
-            _db.ExpenseCategory.Remove(expensec);
+            _db.ExpenseCategories.Remove(expensec);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        public IActionResult AddOrUpdate(int? id)
+        public IActionResult AddOrUpdate(int id)
         {
-            if(id == null) 
-            {
+            if (id == 0)
                 return View(new ExpenseCategory());
-            }
-            else 
-            {
-                var ex = _db.ExpenseCategory.Find(id);
-                if(ex == null || id == 0) return NotFound(); 
-                else return View(ex);
-
-            }
+            else
+                return View(_db.ExpenseCategories.Find(id));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddOrUpdate(ExpenseCategory expensec)
         {
-            if (ModelState.IsValid) 
+            if (expensec.C_Id == 0)
             {
-                if(expensec.C_Id == 0) { }
-                else 
-                {
-                    if (_db.ExpenseCategory.Find(expensec) == null)
-                    {
-                        _db.ExpenseCategory.Add(expensec);
-                        _db.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
-                    else 
-                    { 
-                        _db.ExpenseCategory.Update(expensec);
-                        _db.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
-                }
-                
+                _db.Add(expensec);
             }
-
-            return View(expensec);
+            else
+            {
+                _db.Update(expensec);
+            }
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
