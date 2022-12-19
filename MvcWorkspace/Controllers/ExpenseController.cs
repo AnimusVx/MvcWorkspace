@@ -57,7 +57,7 @@ namespace MvcWorkspace.Controllers
                     //Add db 
                     _db.Expenses.Add(expense);
                     _db.SaveChanges();
-                    return RedirectToAction("Index");
+                    
                 }
                 else
                 {
@@ -65,7 +65,7 @@ namespace MvcWorkspace.Controllers
                     _db.Expenses.Update(expense);
                     _db.SaveChanges();  
                 }
-                
+                return RedirectToAction("Index");
             }
             return View(expense);
         }

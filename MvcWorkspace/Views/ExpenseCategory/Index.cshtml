@@ -1,15 +1,15 @@
-﻿@model IEnumerable<Expense>
+@model IEnumerable<ExpenseCategory>
 @{
-    ViewData["Title"] = "Expense Home";
+    ViewData["Title"] = "ExpenseCategory Home";
 }
 
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Expenses List</h2>
+            <h2 class="text-primary">Expense Categories List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Expense" asp-action="AddOrUpdate" class="btn btn-primary">Create new Expense</a>
+            <a asp-controller="ExpenseCategory" asp-action="AddOrUpdate" class="btn btn-primary">Create new Expense</a>
         </div>
     </div>
     <br />
@@ -20,10 +20,7 @@
             <thead>
                 <tr class="align-middle text-primary">
                     <th>
-                        Expense
-                    </th>
-                    <th>
-                        Amount
+                        Expense Categories
                     </th>
                     <th>
                         
@@ -31,15 +28,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var expense in Model)
+                @foreach(var expensecategory in Model)
                 {
                 <tr class="align-middle">
-                    <td width="25%">@expense.ExpenseName</td>
-                    <td width="20%">@expense.Amount</td>
+                    <td width="25%">@expensecategory.ExpenseCName</td>
                     <td width="30%" class="">
                         <div class="w-100 btn-group" role="group">
-                            <a asp-controller="Expense" asp-action="AddOrUpdate" asp-route-id="@expense.Id" class="btn btn-outline-primary mx-2">Update</a>
-                            <a asp-controller="Expense" asp-action="Delete" asp-route-id="@expense.Id" class="btn btn-outline-danger mx-2">Delete</a>
+                            <a asp-controller="ExpenseCategory" asp-action="AddOrUpdate" asp-route-id="@expensecategory.C_Id" class="btn btn-outline-primary mx-2">Update</a>
+                            <a asp-controller="ExpenseCategory" asp-action="Delete" asp-route-id="@expensecategory.C_Id" class="btn btn-outline-danger mx-2">Delete</a>
                         </div>
                     </td>
                 </tr>
