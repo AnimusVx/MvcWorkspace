@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MvcWorkspace.Data;
 using MvcWorkspace.Models;
 using MvcWorkspace.Models.ViewModels;
@@ -22,6 +23,8 @@ namespace MvcWorkspace.Controllers
             {
                 expense.ExpenseCategory = _db.ExpenseCategories.Find(expense.C_Id);
             }
+            // Eager Loading 
+            IEnumerable<Expense> ExpenseList = _db.Expenses.Include(u => u.ExpenseCategory);
             return View(Expenses);
         }
 
