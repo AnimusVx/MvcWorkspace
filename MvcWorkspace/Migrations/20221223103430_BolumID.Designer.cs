@@ -11,8 +11,8 @@ using MvcWorkspace.Data;
 namespace MvcWorkspace.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221223065612_VMtest")]
-    partial class VMtest
+    [Migration("20221223103430_BolumID")]
+    partial class BolumID
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,13 +48,32 @@ namespace MvcWorkspace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("BolumID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Test")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("BolumID");
+
                     b.ToTable("personels");
+                });
+
+            modelBuilder.Entity("MvcWorkspace.Models.Personel", b =>
+                {
+                    b.HasOne("MvcWorkspace.Models.Bolum", "Bolum")
+                        .WithMany()
+                        .HasForeignKey("BolumID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bolum");
                 });
 #pragma warning restore 612, 618
         }

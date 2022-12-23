@@ -46,6 +46,9 @@ namespace MvcWorkspace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("BolumID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -55,7 +58,20 @@ namespace MvcWorkspace.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BolumID");
+
                     b.ToTable("personels");
+                });
+
+            modelBuilder.Entity("MvcWorkspace.Models.Personel", b =>
+                {
+                    b.HasOne("MvcWorkspace.Models.Bolum", "Bolum")
+                        .WithMany()
+                        .HasForeignKey("BolumID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bolum");
                 });
 #pragma warning restore 612, 618
         }

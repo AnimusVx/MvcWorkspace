@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MvcWorkspace.Models
 {
@@ -8,7 +9,11 @@ namespace MvcWorkspace.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public int Test { get; set; }   
+        public int Test { get; set; }
+
+        [ForeignKey("BolumID")]
+        public Bolum Bolum { get; set; }
+        public int BolumID { get; set; }
 
     }
 }
