@@ -1,39 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using MvcWorkspace.Data;
 using MvcWorkspace.Models;
 using MvcWorkspace.Models.ViewModels;
-using System.Collections.Generic;
+using MvcWorkspace.Services;
 
 namespace MvcWorkspace.Controllers
 {
     public class ExpenseController : Controller
     {
-        private readonly AppDbContext _db;
-        public ExpenseController(AppDbContext db)
+        private readonly IExpenseService _service;
+        public ExpenseController(IExpenseService service)
         {
-            _db = db;
+            _service = service;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Expense> Expenses = _db.Expenses;
-            foreach (var expense in Expenses)
-            {
-                expense.ExpenseCategory = _db.ExpenseCategories.Find(expense.C_Id);
-            }
-            // Eager Loading 
-            IEnumerable<Expense> ExpenseList = _db.Expenses.Include(u => u.ExpenseCategory);
-            return View(Expenses);
+            return View(_service.GetExpenses());
         }
 
         public IActionResult Delete(int id)
         {
-            var expense = _db.Expenses.Find(id);
-            if (expense == null || id == 0) return NotFound();
-            _db.Expenses.Remove(expense);
-            _db.SaveChanges();
+            bool not = _service.Delete(id);
+            if (not) return NotFound();
             return RedirectToAction("Index");
         }
 
@@ -42,36 +30,49 @@ namespace MvcWorkspace.Controllers
             ExpenseVM expenseVM = new ExpenseVM()
             {
                 Expense = new Expense(),
-                ExpenseCat = _db.ExpenseCategories.Select(x => new SelectListItem { Value = x.C_Id.ToString(), Text = x.ExpenseCName })
+                CategoryDropdown = _service.CategorySelectListItems()
+
             };
-            
-            // ViewBag.ExpenseCat = ExpenseCat;
+
             if (id == 0)
-            {
                 return View(expenseVM);
-            }
             else
             {
-                expenseVM.Expense = _db.Expenses.Find(id);
+                expenseVM.Expense = _service.GetExpense(id);
                 return View(expenseVM);
             }
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddOrUpdate(Expense expense)
         {
-                if (expense.Id == 0)
-                {
-                    _db.Add(expense);
-                }
-                else
-                {
-                    _db.Update(expense);
-                }
-                _db.SaveChanges();
+            if (expense.Id == 0)
+            {
+                _service.Add(expense);
+            }
+            else
+            {
+                _service.Update(expense);
+            }
 
-                return RedirectToAction("Index");
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult CategoryExpenses(int cid)
+        {
+            IEnumerable<Expense> Expenses = _service.GetCatExpenses(cid);
+            GetTotal(Expenses);
+            ViewBag.ExpenseCat = _service.GetExpensesCatName(cid);
+            return View(Expenses);
+        }
+
+        private void GetTotal(IEnumerable<Expense> expenses)
+        {
+            ViewBag.Amounts = 0;
+
+            foreach (var exp in expenses) ViewBag.Amounts += exp.Amount;
         }
     }
 }
