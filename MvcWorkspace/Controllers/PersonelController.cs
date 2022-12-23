@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MvcWorkspace.Data;
 using MvcWorkspace.Models;
+using MvcWorkspace.Models.ViewModels;
 
 namespace MvcWorkspace.Controllers
 {
@@ -13,18 +14,23 @@ namespace MvcWorkspace.Controllers
         }
         public IActionResult Index()
         {
+            PersonelVM personelVM = new PersonelVM();   
             IEnumerable<Personel> personels = _db.personels;
 
-            ViewBag.PersonelCount = personels.Count();
+            // ViewBag.PersonelCount = personels.Count();
             
-            List<string> names = new List<string>();
+            List<string> kayitlar = new List<string>();
             
             foreach (var p in personels)
             {
-                names.Add($"{p.Id} - {p.Name}");
+                kayitlar.Add($"{p.Id} - {p.Name}");
             }
+            personelVM.PersonelCount = personels.Count();
+            personelVM.PersoneListe = kayitlar;
 
-            return View(names);
+            return View(personelVM);
+            // return View(kayitlar);
+            // return View(personels);
         }
     }
 }
