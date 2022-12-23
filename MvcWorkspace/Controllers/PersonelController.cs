@@ -14,7 +14,7 @@ namespace MvcWorkspace.Controllers
         }
         public IActionResult Index()
         {
-            PersonelVM personelVM = new PersonelVM();   
+            PersonelVM personelVM = new PersonelVM();   // ViewModel obje mantığıyla çalışıyor. 
             IEnumerable<Personel> personels = _db.personels;
 
             // ViewBag.PersonelCount = personels.Count();
