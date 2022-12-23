@@ -19,14 +19,14 @@ namespace MvcWorkspace.Controllers
 
             // ViewBag.PersonelCount = personels.Count();
             
-            List<string> kayitlar = new List<string>();
+            //List<string> kayitlar = new List<string>();
             
-            foreach (var p in personels)
-            {
-                kayitlar.Add($"{p.Id} - {p.Name}");
-            }
+            //foreach (var p in personels)
+            //{
+            //    kayitlar.Add($"{p.Id} - {p.Name}");
+            //}
             personelVM.PersonelCount = personels.Count();
-            personelVM.PersoneListe = kayitlar;
+            personelVM.PersoneListe = personels;
 
             return View(personelVM);
             // return View(kayitlar);

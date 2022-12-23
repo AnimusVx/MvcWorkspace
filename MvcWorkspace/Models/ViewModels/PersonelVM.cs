@@ -3,6 +3,6 @@
     public class PersonelVM
     {
         public int PersonelCount { get; set; }      
-        public List<string> PersoneListe { get; set; }
+        public IEnumerable<Personel> PersoneListe { get; set; }
     }
 }

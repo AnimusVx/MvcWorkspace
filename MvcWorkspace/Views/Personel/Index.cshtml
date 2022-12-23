@@ -1,13 +1,15 @@
 ﻿@*  @model IEnumerable<Personel>  *@
 
-    @model IEnumerable<PersonelVM>
+    @model PersonelVM
     <h3>Toplam = @ViewBag.PersonelCount</h3>
+    <h3>Toplam = @Model.PersonelCount</h3>
+
     <ul>
-    @foreach (var item in Model)
+    @foreach (var personel in Model.PersoneListe)
     {
         <li>
             @* @item.Id - @item.Name *@
-            @item
+            @personel.Id - @personel.Name - @personel.Test
         </li>
     }
     </ul>
