@@ -1,0 +1,13 @@
+﻿@*  @model IEnumerable<Personel>  *@
+    @model List<string>
+    <h3>Toplam = @ViewBag.PersonelCount</h3>
+    <ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            @* @item.Id - @item.Name *@
+            @item
+        </li>
+    }
+    </ul>
+        
