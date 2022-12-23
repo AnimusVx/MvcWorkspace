@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MvcWorkspace.Data;
 using MvcWorkspace.Models;
 using MvcWorkspace.Models.ViewModels;
@@ -15,7 +16,7 @@ namespace MvcWorkspace.Controllers
         public IActionResult Index()
         {
             PersonelVM personelVM = new PersonelVM();   // ViewModel obje mantığıyla çalışıyor. 
-            IEnumerable<Personel> personels = _db.personels;
+            IEnumerable<Personel> personels = _db.personels.Include(p => p.Bolum);
 
             // ViewBag.PersonelCount = personels.Count();
             
